@@ -59,3 +59,35 @@ To see the important metrics in a unified dashboard, let’s create a CloudWatch
 
 ![unified-dash](/images/unified-dash.png)
 
+## API Gateway metrics and logs
+
+AWS API Gateway provides several default metrics that include `Latency`, `Count`, `Integration Latency`, `4XX Error`, and `5XX Error`. To assess the impact of including API Gateway in the overall solution, it’s important to observe the difference between the `Latency metric` and the `Integration Latency metric`. This difference represents the extra overhead added to the application performance because of including API Gateway in the architecture.
+
+API Gateway allows you to log two types of logs: `API Gateway execution logs` and `API Gateway access logs`.
+
+  - API Gateway execution logs can have three different logging levels: namely `errors only`, `error and info logs`, and `full request and response logs`. You can set logging globally for the entire API Gateway or in different stages of API Gateway.
+
+  - API Gateway access logs provide a comprehensive view of who is accessing the API including information such as `IP`, `HttpMethod`, `User`, `Protocol`, and `Time`. These logs provide valuable insights into the origin of API Gateway invocations.
+
+> Note:
+> We have not enabled logging in the CloudFormation template for this exercise, and it should be done manually, as shown below:
+
+1. Go to `API Gateway` | `APIs` | `serverless-app***` | `Stages`
+2. Select the `Prod` stage and click `Edit` for `Logs and tracing`
+3. Edit appropriately as shown below and click `Save`:
+
+![API-Gateway-Edit-logs-and-tracing](/images/API-Gateway-Edit-logs-and-tracing.png)
+
+Here's the log format used:
+
+```
+{"requestId": "$context.requestId", "ip": "$context.identity.sourceIp", "caller": "$context.identity.caller", "user": "$context.identity.user", "requestTime": "$context.requestTime", "httpMethod": "$context.httpMethod", "resourcePath": "$context.resourcePath", "status": "$context.status", "protocol": "$context.protocol", "responseLength": "$context.responseLength"}
+```
+
+Reference doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+
+4. You will first need to create an IAM role for logging to CloudWatch and add the IAM role in the API Gateway console settings for CloudWatch log role ARN.
+
+> Follow instructions in this blog post: https://cloudnamaste.com/api-gateway-cloudwatch-logs/
+
+Relying solely on the built-in metrics for API Gateway and Lambda function(s) presents difficulties in understanding the performance issues related to the Lambda functions – for example, network performance and cold starts. Although we can estimate the count of cold starts from logs, we can achieve a more comprehensive understanding of performance through `Lambda Insights`.
