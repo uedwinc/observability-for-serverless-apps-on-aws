@@ -30,3 +30,32 @@ To verify the logs generated due to Lambda invocation, you can navigate to `Clou
 ![log-groups](/images/log-groups.png)
 ![log-group-events](/images/log-groups-events.png)
 
+## CloudWatch Logs Insights from Lambda logs
+
+You could derive operational intelligence from the Lambda logs using `CloudWatch Logs Insights`.
+
+Here is a sample query to estimate the `number of cold starts`, the `average duration of the Lambda function execution`, and `memory usage` grouped by a 5-minute time period:
+
+```
+filter @type = "REPORT"
+| stats
+  count(@type) as countInvocations ,
+  count(@initDuration) as countColdStarts ,(count(@initDuration)/
+count(@type))*100 as percentageColdStarts,
+  max(@initDuration) as maxColdStartTime,
+  avg(@duration) as averageDuration,
+  max(@duration) as maxDuration,
+  min(@duration) as minDuration,
+  avg(@maxMemoryUsed) as averageMemoryUsed,
+  max(@memorySize) as memoryAllocated, (avg(@maxMemoryUsed)/max(@memorySize))*100 as percentageMemoryUsed
+by bin(5m) as timeFrame
+```
+
+The output of this code, when executed, will provide a view as follows:
+
+![query-output](/images/query-output.png)
+
+To see the important metrics in a unified dashboard, let’s create a CloudWatch dashboard for this custom application, for metrics generated from the API Gateway, Lambda functions, and DynamoDB.
+
+![unified-dash](/images/unified-dash.png)
+
