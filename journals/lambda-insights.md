@@ -6,11 +6,13 @@ CloudWatch Lambda Insights is a powerful extension for understanding the perform
 
 ![enable-lambda-insights](/images/enable-lambda-insights.png)
 
+Documentation: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-Getting-Started-console.html
+
 When you enable enhanced monitoring, the Lambda Insights extension will add to the Lambda function as a layer
 
 ![insights-extension](/images/insights-extension.png)
 
-Rather than enabling each from the AWS console, let’s enable CloudWatch Lambda Insights for all the functions in the application deployed using CloudFormation.
+> Rather than enabling each from the AWS console, let’s enable CloudWatch Lambda Insights for all the functions in the application deployed using CloudFormation.
 
 2. Edit the CloudFormation template by adding the following YAML code, which adds a new Lambda layer with the Lambda Insights extension with the latest version in the [template-insights-enabled.yaml](../template-insights-enabled.yaml) file:
 
@@ -21,8 +23,31 @@ Layers:
 # Make sure to use the latest ARN version
 ```
 
+Documentation: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights-Getting-Started-cloudformation.html
+
 3. Update the CloudFormation stack (on the console) with the new [template file](../template-insights-enabled.yaml) to enable the Lambda extension for all three Lambda functions.
+
+> You can confirm on the Lambda console that all 3 functions are enabled
 
 Enabling Lambda Insights for a Lambda function provides additional metrics related to execution and also provides logs about the Lambda execution. A dashboard view is available out of the box for visualizing performance monitoring for a single function or a performance monitoring view for multiple functions.
 
 Let’s navigate to the Lambda Insights dashboard from the CloudWatch console and understand the metrics and insights available from the Lambda Insights dashboard.
+
+## Single-function view
+
+Single-function view provides detailed performance metrics and logs for a single Lambda function in your AWS account.
+
+1. Let’s navigate to the single-function view. Go to `CloudWatch` | `Insights` | `Lambda Insights`. Select the Lambda function of the serverless application deployed, namely `"serverless-app-getAllItemsFunction-***"`. It provides CPU, memory, and network usage of the Lambda function.
+
+![insights-dash](/images/insights-dash.png)
+
+2. Additionally, it provides a detailed breakdown of the last 1,000 invocations, including initialization duration, overall duration, memory used, CPU time, and network I/O.
+
+![invocations](/images/invocations.png)
+
+You can also view the application logs generated for your function by simply navigating to the second tab labeled `Application logs`
+
+3. Additionally, You can click to view the trace details
+
+![invocate-trace](/images/invocate-trace.png)
+
