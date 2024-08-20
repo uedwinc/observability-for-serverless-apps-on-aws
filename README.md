@@ -9,6 +9,8 @@
 
 The `/journals` directory contains
 
-- [ ] [Deploying the serverless application](journals/deployment.md) runniing Amazon API Gateway, AWS Lambda, and DynamoDB
+- [ ] [Deploying the serverless application](journals/deployment.md) running Amazon API Gateway, AWS Lambda, and DynamoDB
 
 - [ ] [Exploring default metrics and logs](journals/default-metrics-logs.md) from the serverless application
+
+- [ ] [Using CloudWatch Lambda Insights](journals/lambda-insights.md) to understand the performance of Lambda functions
