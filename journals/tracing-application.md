@@ -69,3 +69,39 @@ First, let’s look into current logging in the CloudWatch logs. As we examine t
 
 > We will examine each modification made to the `GetAllItems` Lambda function step by step in order to expand observability for metrics, logs, and traces. We will see how it enhances our ability to troubleshoot applications and add business context to our observability, resulting in an improved overall experience.
 
+### Lambda Powertools for enhanced logging
+
+The `GetAllItems` Lambda function has been added with Lambda Powertools to capture information using the structure JSON format and retrieve additional information about the context of the Lambda function, such as cold starts, runtime, and so on. 
+
+Let’s look at the additional code added for structure in the Lambda function:
+
+1. The code first imports the `Logger` and `injectLambdaContext` modules from the `@aws-lambda-powertools/logger` library:
+
+```js
+//Logging using Lambda powertools with Lambda context support.
+
+//Inclusion of Logger PowerLambda Tools
+const { Logger, injectLambdaContext } = require('@aws-lambda-powertools/logger');
+```
+
+2. A new `Logger` instance is created where the `serviceName` property is set to `get-all-items`. This is used to identify the source of the logs in the Amazon CloudWatch logs:
+
+```js
+//Servicename of the lambda function shown in the CloudWatch Logs
+const logger = new Logger({serviceName: 'get-all-items'});
+```
+
+3. The `injectLambdaContext` function is then used to log the Lambda context, which contains information about the function’s execution environment and its interaction with the AWS infrastructure. You can see that the added Lambda context provides information about cold starts, function information, and service name. We have also logged output received from `get-all-items` into the CloudWatch log:
+
+```js
+//Logging Lambda Context and the output of items as a JSON using logger standard format
+  logger.addContext(context);
+
+//Logging Items retrieved as a JSON in CloudWatch Logs.
+  logger.info('Items in list:', { items });
+```
+
+4. Enhanced Lambda logging with Lambda Powertools showing the full Lambda context along with the number of items retrieved and the details in the CloudWatch logs
+
+![lambda-with-powertools](/images/lambda-with-powertools.png)
+
