@@ -14,3 +14,5 @@ The `/journals` directory contains
 - [ ] [Exploring default metrics and logs](journals/default-metrics-logs.md) from the serverless application
 
 - [ ] [Using CloudWatch Lambda Insights](journals/lambda-insights.md) to understand the performance of Lambda functions
+
+- [ ] [End-to-end tracing of a Node.js application](journals/tracing-application.md) running on a serverless component
