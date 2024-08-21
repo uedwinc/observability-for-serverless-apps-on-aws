@@ -46,3 +46,26 @@ To test the end-to-end tracing of the application, you can use HTTPie or Postman
 
 > The `Trace` view provides a high-level overview of the user journey, but it may not give enough detail on where the user is encountering an issue. To get this information, we can use segments in AWS X-Ray and trace database calls with X-Ray. 
 > Leveraging Lambda Powertools can simplify the implementation process and add these details without sacrificing the maintainability or readability of the application code.
+
+## Exploring Lambda Powertools
+
+Lambda Powertools is a suite of utilities and libraries that will help in adopting best practices for tracing, structured logging, and so on in Lambda functions that are built around the AWS SDKs. There are three main core utilities, namely `Logger`, `Metrics`, and `Tracer` to support the three pillars of observability.
+
+Lambda Powertools offers three different ways to instrument your code, offering flexibility and convenience to suit your specific needs: `middy` (middleware approach), the `method decorator` approach and the `manual` approach. We will use the manual approach to generate logs, metrics, and traces for the Lambda function.
+
+Now, let’s extend the observability for the Node.js application using Lambda Powertools.
+
+First, let’s look into current logging in the CloudWatch logs. As we examine the logs, we’ll notice they are lacking in detail and are not structured in any particular format. This presents a challenge when trying to gain insight into the inner workings of the Lambda function, especially when retrieving items from DynamoDB.
+
+![lambda-logs-first](/images/lambda-logs-first.png)
+
+### Deploying a new sample application
+
+1. Create an [updated CloudFormation template](../template-powertools.yaml) with all the necessary changes.
+
+2. Use this CloudFormation template and create a new application named `serverless-app2`. As the application is in Node.js, I have imported the npm libraries of Lambda Powertools and included them in the CloudFormation deployment
+
+> I have included Lambda Powertools only in the `get-all-items.js` Lambda function in this exercise. So, please execute the Postman/HTTPie configuration for inserting the records and retrieving the details. 
+
+> We will examine each modification made to the `GetAllItems` Lambda function step by step in order to expand observability for metrics, logs, and traces. We will see how it enhances our ability to troubleshoot applications and add business context to our observability, resulting in an improved overall experience.
+
