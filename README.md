@@ -16,3 +16,5 @@ The `/journals` directory contains
 - [ ] [Using CloudWatch Lambda Insights](journals/lambda-insights.md) to understand the performance of Lambda functions
 
 - [ ] [End-to-end tracing of a Node.js application](journals/tracing-application.md) running on a serverless component
+
+- [ ] [Troubleshooting performance issues](journals/x-ray-groups.md) using X-Ray groups
