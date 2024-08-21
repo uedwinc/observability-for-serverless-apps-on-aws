@@ -105,3 +105,41 @@ const logger = new Logger({serviceName: 'get-all-items'});
 
 ![lambda-with-powertools](/images/lambda-with-powertools.png)
 
+### Lambda Powertools for custom metrics
+
+We have further enhanced our application by retrieving and adding custom business metrics using the Lambda Powertools metrics functionality. The Lambda function retrieved the item count metric namely Count of retrieved items as a custom metric and added it into CloudWatch metics using `Embedded Metric Format (EMF)`. 
+
+Let’s understand the changes made in the `get-all-items.js` file:
+
+1. The code first imports the `Metrics`, `MetricUnits`, and `logMetrics` modules from the `@aws-lambda-powertools/metrics` library:
+
+```js
+//Inclusion of Metrics from Lambda PowerTools
+const { Metrics, MetricUnits, logMetrics } = require('@aws-lambda-powertools/metrics');
+```
+
+2. Next, a `new Metrics` instance is created, where the `namespace` property is set to `getitems` and the `serviceName` property is set to `get-all-items`. These properties identify the source of the metrics in the Amazon CloudWatch custom metrics:
+
+```js
+//Custom Metric namespace and service name in CloudWatch Custom Metrics
+const metrics = new Metrics({ namespace: 'getitems', serviceName: 'get-all-items' });
+```
+
+3. The code then adds a custom metric called '`itemcount`' to the Metrics instance, using the `metrics.addMetric` method. The metric is set to the count of items in the items array and has a unit of `MetricUnits.Count`. Finally, the code calls the `metrics.publishStoredMetrics` method to publish the custom metrics to CloudWatch:
+
+```js
+// Adding the total retrieved items as a metric in the Custom namespace called "getitems"
+  metrics.addMetric('itemcount', MetricUnits.Count, items.Count);
+  metrics.publishStoredMetrics();
+```
+
+4. You can verify from the CloudWatch logs that the metric count for the total items retrieved is published to the CloudWatch metric custom namespace called `getitems`:
+
+![custom-metric-data](/images/custom-metric-data.png)
+
+5. Navigate to `All metrics` | `Custom namespaces` | `getitems`. The `getitems` namespace is published with the details of the `count of items` retrieved from DynamoDB from the structure JSON output from the Lambda log.
+
+6. If you graph the metric over the period, you can understand how the number of items increased in DynamoDB over some time:
+
+![items-in-dynamodb](/images/items-in-dynamodb.png)
+
