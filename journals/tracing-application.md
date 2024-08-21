@@ -199,8 +199,11 @@ finally {
 ```
 
 > [!Summary:]
+
 > With structured logging, we can log important information, such as the Lambda context and the output of the function, in a consistent and well-organized manner. This makes it easier to search and analyze the logs in Amazon CloudWatch Logs.
+
 > By adding custom business metrics, we can track key performance indicators and other relevant metrics related to the function’s behavior and impact on the overall business. This data can be stored and visualized in Amazon CloudWatch custom metrics, allowing us to monitor the performance of the function over time and make informed decisions about the function’s development and operation.
+
 > In addition, by using X-Ray tracing, we can gain visibility into the performance and behavior of the function as it interacts with other AWS services, such as DynamoDB. By capturing and tracing all calls to the DynamoDB service through the `DocumentClient`, we can see a complete picture of the function’s behavior, from the time it is invoked to the time it returns a response. This information can be analyzed in the X-Ray service, providing us with valuable insights into the performance and behavior of the function and its interactions with other services.
 
 Overall, leveraging Lambda Powertools to enhance the structured logging, custom metrics, and X-Ray tracing of a Lambda function can greatly improve the overall observability of the function, making it easier to troubleshoot issues, understand its impact on the business, and optimize its performance.
