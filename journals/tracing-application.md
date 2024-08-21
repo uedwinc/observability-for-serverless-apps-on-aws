@@ -143,3 +143,64 @@ const metrics = new Metrics({ namespace: 'getitems', serviceName: 'get-all-items
 
 ![items-in-dynamodb](/images/items-in-dynamodb.png)
 
+### Lambda Powertools for tracing
+
+Now, let’s look into the traceability enhancement made using Lambda Powertools by adding annotations for the cold start of the Lambda function and adding segments to capture the DynamoDB calls using the tracer functionality:
+
+1. The code first imports the `Tracer` and `captureLambdaHandler` modules from the `@aws-lambda-powertools/tracer` library:
+
+```js
+//Inclusion of tracer from Lambda Powertools
+const { Tracer, captureLambdaHandler } = require('@aws-lambda-powertools/tracer');
+```
+
+2. Next, a new `Tracer` instance is created, where the `serviceName` property is set to `get-all-items`. This is used to identify the source of the traces in the AWS X-Ray service:
+
+```js
+//X-Ray traces will be added with the servicename "get-all-items"
+const tracer = new Tracer({ serviceName: 'get-all-items' });
+```
+
+3. The code then imports the AWS DynamoDB SDK and creates an instance of the `DocumentClient` class. The `tracer.captureAWSClient` method is used to capture and trace all calls to the DynamoDB service through this client:
+
+```js
+//Inclusion of dynamodb sdk to support tracing
+const { DocumentClient} = require('aws-sdk/clients/dynamodb');
+
+//Trace the dynamoDB calls
+const docClient = tracer.captureAWSClient(new DocumentClient());
+```
+
+You can look at the X-Ray trace to see that the DynamoDB information is captured along with the details about the time spent on the DynamoDB querying, as shown here:
+
+![ddb-xray-tracing](/images/ddb-xray-tracing.png)
+
+4. We have also added annotations to the Lambda function about the cold start with the service name. We have added the following code to annotate the Lambda function in the X-Ray tracing, and also added metadata about the event payload to the X-Ray tracing:
+
+```js
+tracer.putAnnotation('awsRequestId', context.awsRequestId);
+tracer.putMetadata('eventPayload', event);
+```
+
+Below, you can see the annotations about the Lambda cold start, which could help you in filtering the traces using the search functionality.
+
+![lambda-annotations-xray](/images/lambda-annotations-xray.png)
+
+5. Close the segment using the `handlerSegment.close()` function:
+
+```js
+finally {
+  // Close subsegment (the AWS Lambda one is closed automatically)
+  handlerSegment.close();
+
+  // Set back the facade segment as active again
+  tracer.setSegment(segment);
+}
+```
+
+> [!Summary:]
+> With structured logging, we can log important information, such as the Lambda context and the output of the function, in a consistent and well-organized manner. This makes it easier to search and analyze the logs in Amazon CloudWatch Logs.
+> By adding custom business metrics, we can track key performance indicators and other relevant metrics related to the function’s behavior and impact on the overall business. This data can be stored and visualized in Amazon CloudWatch custom metrics, allowing us to monitor the performance of the function over time and make informed decisions about the function’s development and operation.
+> In addition, by using X-Ray tracing, we can gain visibility into the performance and behavior of the function as it interacts with other AWS services, such as DynamoDB. By capturing and tracing all calls to the DynamoDB service through the `DocumentClient`, we can see a complete picture of the function’s behavior, from the time it is invoked to the time it returns a response. This information can be analyzed in the X-Ray service, providing us with valuable insights into the performance and behavior of the function and its interactions with other services.
+
+Overall, leveraging Lambda Powertools to enhance the structured logging, custom metrics, and X-Ray tracing of a Lambda function can greatly improve the overall observability of the function, making it easier to troubleshoot issues, understand its impact on the business, and optimize its performance.
