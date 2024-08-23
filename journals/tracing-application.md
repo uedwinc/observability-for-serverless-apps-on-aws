@@ -4,7 +4,7 @@ Let’s enable `X-Ray active tracing`. When enabled, active tracing captures det
 
 1. Let’s enable active tracing for both the API Gateway and the Lambda function using the [updated CloudFormation template](../template-tracing-enabled.yaml)
 
-- To enable active tracing for the Lambda function(s), I have added a `Mode:Active` line to the function:
+- To enable active tracing for the Lambda function(s), I have added a `Mode:Active` line to the template function:
 
 ```yaml
 <Function-Name>:
@@ -65,7 +65,7 @@ First, let’s look into current logging in the CloudWatch logs. As we examine t
 
 2. Use this CloudFormation template and create a new application named `serverless-app2`. As the application is in Node.js, I have imported the npm libraries of Lambda Powertools and included them in the CloudFormation deployment
 
-> I have included Lambda Powertools only in the `get-all-items.js` Lambda function in this exercise. So, please execute the Postman/HTTPie configuration for inserting the records and retrieving the details. 
+> I have included Lambda Powertools only in the `get-all-items.js` Lambda function in this exercise (found at `src/handlers/get-all-items.js` in the serverless-app2 code). So, please execute the Postman/HTTPie configuration for inserting the records and retrieving the details. 
 
 > We will examine each modification made to the `GetAllItems` Lambda function step by step in order to expand observability for metrics, logs, and traces. We will see how it enhances our ability to troubleshoot applications and add business context to our observability, resulting in an improved overall experience.
 

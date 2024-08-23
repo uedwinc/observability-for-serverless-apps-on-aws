@@ -18,3 +18,9 @@ The `/journals` directory contains
 - [ ] [End-to-end tracing of a Node.js application](journals/tracing-application.md) running on a serverless component
 
 - [ ] [Troubleshooting performance issues](journals/x-ray-groups.md) using X-Ray groups
+
+# Summary
+
+The overall Lambda observability could be summarized in a diagram, as follows:
+
+![lambda-observability-summary](/images/lambda-observability-summary.png)
